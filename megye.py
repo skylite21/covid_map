@@ -53,8 +53,7 @@ layout = dict(
     mapbox=dict(
         style='carto-positron',
         center={'lon': 19.30, 'lat': 47.30},
-        zoom=6,
-        layers=[{'type': "fill", 'below': "traces", 'color': "royalblue"}]
+        zoom=6
     ),
     margin={'l': 0, 'r': 0, 'b': 0, 't': 0}
 )
