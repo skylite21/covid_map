@@ -5,10 +5,10 @@ Egy gyors hacky megoldás magyarország covid adatainak vizualizálására megy�
 
 ## használat
 
-készíts virtualenv-et, majd aktiváld:
+készíts virtuális környezetet, majd aktiváld:
 
 ```
-virtualenv -p python3 venv; source venv/bin/activate
+python3 -m venv venv; source venv/bin/activate
 ```
 telepitsd a dependency-ket:
 

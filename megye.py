@@ -1,6 +1,9 @@
-# pip install numpy pandas plotly lxml
+# pip install -r requirements.txt
 import json
+from io import StringIO
+
 import pandas as pd
+import requests
 from urllib.request import urlopen
 import plotly.graph_objects as go
 
@@ -8,14 +11,22 @@ geojson_url = '''
 https://raw.githubusercontent.com/skylite21/csv_for_colab/master/megyek_uj.json
 '''
 
-data = pd.read_html(
-    'https://en.wikipedia.org/wiki/COVID-19_pandemic_in_Hungary'
+# Wikipedia blocks requests without a browser-like User-Agent (403).
+response = requests.get(
+    'https://en.wikipedia.org/wiki/COVID-19_pandemic_in_Hungary',
+    headers={'User-Agent': 'Mozilla/5.0'},
 )
+response.raise_for_status()
+data = pd.read_html(StringIO(response.text))
 
 datum = '2021.05.16.'
 
-# print(data)
-megye_adatok = data[4]
+# The county infections table position on the page shifts as the article
+# grows, so find it by a known column instead of a hardcoded index.
+megye_adatok = next(
+    t for t in data
+    if 'Bács-Kiskun' in [c[0] if isinstance(c, tuple) else c for c in t.columns]
+)
 megye_adatok.columns = megye_adatok.columns.droplevel(-1)
 # print(megye_adatok)
 
@@ -30,8 +41,8 @@ df.reset_index(inplace=True)
 df.columns = ['megye', 'covid']
 df = df[1:]
 df['megye'] = df['megye'].astype(str) + ' megye'
-df['megye'][5] = 'Csongrád megye'
-df['megye'][20] = 'Budapest'
+df.loc[5, 'megye'] = 'Csongrád megye'
+df.loc[20, 'megye'] = 'Budapest'
 # print(df)
 
 with urlopen(geojson_url) as response:
