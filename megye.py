@@ -37,7 +37,7 @@ megye_adatok = megye_adatok.drop(['all', 'Hospitalized', 'Ventilated'], axis=1)
 df = megye_adatok.loc[megye_adatok['Date'] == datum]
 
 df = df.transpose()
-df.reset_index(inplace=True)
+df = df.reset_index()
 df.columns = ['megye', 'covid']
 df = df[1:]
 df['megye'] = df['megye'].astype(str) + ' megye'
@@ -50,7 +50,7 @@ with urlopen(geojson_url) as response:
 
 
 data = dict(
-    type='choroplethmapbox',
+    type='choroplethmap',
     locations=df['megye'],
     z=df['covid'],
     colorscale='Rainbow',
@@ -61,7 +61,7 @@ data = dict(
 )
 
 layout = dict(
-    mapbox=dict(
+    map=dict(
         style='carto-positron',
         center={'lon': 19.30, 'lat': 47.30},
         zoom=6

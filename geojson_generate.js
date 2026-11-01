@@ -4,7 +4,8 @@
 
 const fs = require('fs')
 const cheerio = require('cheerio')
-const got = require('got')
+// got is ESM-only since v12, so it has to be loaded with a dynamic import()
+const got = (...args) => import('got').then(({ default: got }) => got(...args))
 
 async function getCountyOsmIds() {
 	const res = await got('https://wiki.openstreetmap.org/wiki/Hungary/Boundaries')
